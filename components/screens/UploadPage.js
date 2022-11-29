@@ -5,31 +5,38 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const UploadPage = ({navigation}) => {
   return (
     <View style={styles.container}>
-      {/* Title */}
-      <Text style={styles.Title}>Uploaded Documents</Text>
-
-      {/* Uploaded Photos */}
-
-      {/* Add Photo Button */}
-      <TouchableOpacity style={styles.Button}>
-        <MaterialIcons name="add-a-photo" size={25} color="black" />
-        <Text style={styles.ButtonText}>Add Photo</Text>
-      </TouchableOpacity>
-      {/* Complete Session Button */}
-      <TouchableOpacity
-        onPress={() => navigation.navigate('MainPage')}
-        style={[
-          styles.Button,
-          {
-            width: '50%',
-            marginTop: 70,
-            justifyContent: 'space-around',
-            height: 50,
-          },
-        ]}>
-        <MaterialIcons name="check" size={25} color="black" />
-        <Text style={styles.ButtonText}>Complete Session</Text>
-      </TouchableOpacity>
+      <View style={styles.TopWrapper}>
+        {/* Title */}
+        <Text style={styles.Title}>Uploaded Documents</Text>
+        {/* Uploaded Photos */}
+      </View>
+      <View style={styles.BottomWrapper}>
+        {/* Add Photo Button */}
+        <TouchableOpacity style={styles.Button}>
+          <MaterialIcons name="add-a-photo" size={25} color="black" />
+          <Text style={styles.ButtonText}>Add Photo</Text>
+        </TouchableOpacity>
+        {/* Complete Session Button */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MainPage')}
+          style={[
+            styles.Button,
+            {
+              width: '50%',
+              marginVertical: 30,
+              justifyContent: 'space-between',
+              height: 50,
+            },
+          ]}>
+          <MaterialIcons
+            style={{left: 3}}
+            name="check"
+            size={25}
+            color="black"
+          />
+          <Text style={styles.ButtonText}>Complete Session</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -39,12 +46,15 @@ export default UploadPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'space-between',
   },
+  TopWrapper: {},
+  BottomWrapper: {},
   Title: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginTop: 20,
+    marginVertical: 20,
     color: 'black',
   },
   Button: {
@@ -56,11 +66,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 10,
+    marginVertical: 20,
   },
   ButtonText: {
     fontSize: 18,
     color: 'black',
     fontWeight: 'bold',
-    marginLeft: 15,
+    paddingHorizontal: 15,
   },
 });
