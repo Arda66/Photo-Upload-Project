@@ -1,17 +1,22 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import {CreateSession, AddPhoto, DeletePhoto} from '../../redux/actions';
+import {useDispatch, useSelector} from 'react-redux';
 
 const MainPage = ({navigation}) => {
-  const CreateSession = () => {
-    navigation.navigate('UploadPage');
-  };
+  const dispatch = useDispatch();
+  const {Sessions} = useSelector(state => state.reducer);
 
   return (
     <View style={styles.container}>
       <View style={styles.TopWrapper}>{/*  Sessions   */}</View>
       {/* Create Session Button */}
-      <TouchableOpacity style={styles.Button} onPress={() => CreateSession()}>
+      <TouchableOpacity
+        style={styles.Button}
+        onPress={() => {
+          dispatch(CreateSession()), navigation.navigate('UploadPage');
+        }}>
         <AntDesignIcon name="addfolder" size={25} color="black" />
         <Text style={styles.ButtonText}>Create Session</Text>
       </TouchableOpacity>
