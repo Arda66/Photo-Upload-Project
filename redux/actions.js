@@ -3,6 +3,12 @@ const CreateSession = () => {
     type: 'CREATE_SESSION',
   };
 };
+const DeleteSession = id => {
+  return {
+    type: 'DEL_SESSION',
+    payload: id,
+  };
+};
 const AddPhoto = (photo, id) => {
   return {
     type: 'ADD_PHOTO',
@@ -23,4 +29,4 @@ const SetSessions = sessions => {
   };
 };
 
-export {CreateSession, AddPhoto, DeletePhoto, SetSessions};
+export {CreateSession, AddPhoto, DeletePhoto, SetSessions, DeleteSession};
