@@ -1,5 +1,4 @@
 import {
-  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,17 +8,21 @@ import {
 import React from 'react';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
-import {CreateSession, AddPhoto, DeletePhoto} from '../../redux/actions';
+import {CreateSession} from '../../redux/actions';
 import {useDispatch, useSelector} from 'react-redux';
 
 const MainPage = ({navigation}) => {
   const dispatch = useDispatch();
   const {Sessions} = useSelector(state => state.reducer);
-  console.log(Sessions);
+  // console.log(Sessions);
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.TopWrapper}>
+      <ScrollView
+        contentContainerStyle={
+          // In order to center No Sessions Text
+          Sessions.length > 0 ? styles.TopWrapper : styles.EmptyScrollView
+        }>
         {/*  Sessions   */}
         {Sessions.length > 0 ? (
           Sessions.map((item, index) => {
@@ -36,7 +39,9 @@ const MainPage = ({navigation}) => {
                   </Text>
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate('UploadPage', {SessionID: index + 1})
+                      navigation.navigate('UploadPage', {
+                        SessionID: index + 1,
+                      })
                     }>
                     <EntypoIcon name="edit" size={25} color="black" />
                   </TouchableOpacity>
@@ -46,8 +51,7 @@ const MainPage = ({navigation}) => {
           })
         ) : (
           // No Sessions
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View>
             <Text style={styles.Title}>No session yet</Text>
           </View>
         )}
@@ -76,10 +80,16 @@ const styles = StyleSheet.create({
   TopWrapper: {
     flex: 1,
   },
+  EmptyScrollView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   Title: {
     fontSize: 26,
     fontWeight: 'bold',
     color: 'black',
+    textAlign: 'center',
   },
   Button: {
     alignSelf: 'center',
