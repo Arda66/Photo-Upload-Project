@@ -1,15 +1,26 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useEffect} from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {AddPhoto, DeletePhoto} from '../../redux/actions';
 import {launchCamera} from 'react-native-image-picker';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
+
 const UploadPage = ({navigation, route}) => {
+  // useEffect(() => {
+  //   AsyncStorage
+
   const SessionID = route?.params?.SessionID;
   const dispatch = useDispatch();
   const {Sessions} = useSelector(state => state.reducer);
-
+  console.log('Sessions', Sessions);
   const AddPhotoToSession = async () => {
     let path = null;
     // create a variable to store the options
@@ -18,7 +29,7 @@ const UploadPage = ({navigation, route}) => {
       includeBase64: true,
       maxHeight: 200,
       maxWidth: 200,
-      // saveToPhotos: true,
+      saveToPhotos: true,
     };
     const result = await launchCamera(options);
     if (result.didCancel) console.log('User cancelled camera picker');
@@ -27,11 +38,33 @@ const UploadPage = ({navigation, route}) => {
     else {
       path = result.assets[0].uri;
       dispatch(AddPhoto(path, SessionID));
+      AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
     }
   };
 
   const DeletePhotoFromSession = path => {
     dispatch(DeletePhoto(path, SessionID));
+    AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
+  };
+
+  const renderPhotoItem = ({item}) => {
+    return (
+      <View style={styles.PhotoContainer}>
+        <TouchableOpacity onPress={() => DeletePhotoFromSession(item)}>
+          <MaterialIcons
+            style={styles.DeleteButton}
+            name="cancel"
+            size={30}
+            color="red"
+          />
+        </TouchableOpacity>
+        <Image source={{uri: item}} style={styles.Photo} />
+      </View>
+    );
+  };
+  const CompleteSession = () => {
+    AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
+    navigation.navigate('MainPage');
   };
 
   return (
@@ -39,7 +72,21 @@ const UploadPage = ({navigation, route}) => {
       <View style={styles.TopWrapper}>
         {/* Title */}
         <Text style={styles.Title}>Uploaded Documents</Text>
-        {/* Uploaded Photos */}
+        <View style={styles.FlatListWrapper}>
+          {/* Uploaded Photos */}
+          <FlatList
+            data={Sessions[SessionID - 1].Photos}
+            renderItem={renderPhotoItem}
+            horizontal={true}
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
+            ListEmptyComponent={
+              <Text style={styles.EmptyFlatListText}>
+                No photos uploaded yet
+              </Text>
+            }
+          />
+        </View>
       </View>
       <View style={styles.BottomWrapper}>
         {/* Add Photo Button */}
@@ -51,7 +98,7 @@ const UploadPage = ({navigation, route}) => {
         </TouchableOpacity>
         {/* Complete Session Button */}
         <TouchableOpacity
-          onPress={() => navigation.navigate('MainPage')}
+          onPress={() => CompleteSession()}
           style={[
             styles.Button,
             {
@@ -107,5 +154,30 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     paddingHorizontal: 15,
+  },
+  DeleteButton: {
+    position: 'absolute',
+    top: -20,
+    right: -20,
+  },
+  PhotoContainer: {
+    marginHorizontal: 10,
+    paddingTop: 25,
+    flexDirection: 'row',
+  },
+  Photo: {
+    height: 200,
+    width: 200,
+  },
+  FlatListWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  EmptyFlatListText: {
+    flex: 1,
+    marginTop: 40,
+    fontSize: 25,
+    color: 'red',
+    fontWeight: 'bold',
   },
 });
