@@ -1,10 +1,4 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -30,46 +24,46 @@ const MainPage = ({navigation}) => {
     });
   };
 
+  const renderSessionItem = ({item, index}) => {
+    return (
+      <View
+        style={[
+          styles.SessionContainer,
+          {marginTop: item.id == 1 ? 30 : 10}, //conditional rendering for the first element
+        ]}
+        key={index}>
+        <View style={styles.SessionWrapper}>
+          <Text style={styles.SessionTitle}>
+            Session {item.id} - {item.Date}
+          </Text>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('UploadPage', {
+                SessionID: index + 1,
+              })
+            }>
+            <EntypoIcon name="edit" size={25} color="black" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={
-          // In order to center No Sessions Text
-          Sessions.length > 0 ? styles.TopWrapper : styles.EmptyScrollView
-        }>
+      <View style={styles.TopWrapper}>
         {/*  Sessions   */}
-        {Sessions.length > 0 ? (
-          Sessions.map((item, index) => {
-            return (
-              <View
-                style={[
-                  styles.SessionContainer,
-                  {marginTop: item.id == 1 ? 30 : 0}, //conditional rendering for the first element
-                ]}
-                key={index}>
-                <View style={styles.SessionWrapper}>
-                  <Text style={styles.SessionTitle}>
-                    Session {item.id} - {item.Date}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('UploadPage', {
-                        SessionID: index + 1,
-                      })
-                    }>
-                    <EntypoIcon name="edit" size={25} color="black" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            );
-          })
-        ) : (
-          // No Sessions
-          <View>
-            <Text style={styles.Title}>No session yet</Text>
-          </View>
-        )}
-      </ScrollView>
+        <FlatList
+          data={Sessions}
+          renderItem={renderSessionItem}
+          keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={
+            <View>
+              <Text style={styles.Title}>No Sessions Yet</Text>
+            </View>
+          }
+        />
+      </View>
       {/* Create Session Button */}
       <TouchableOpacity
         style={styles.Button}
@@ -92,11 +86,6 @@ const styles = StyleSheet.create({
   },
   TopWrapper: {
     flex: 1,
-  },
-  EmptyScrollView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   Title: {
     fontSize: 26,
