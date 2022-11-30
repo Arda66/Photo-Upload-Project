@@ -41,11 +41,16 @@ const reducer = (state = INITIAL_STATE, action) => {
             return {
               ...session,
               Photos: session.Photos.filter(
-                photo => photo.uri != action.payload.photo.uri,
+                photo => photo != action.payload.photo,
               ),
             };
           } else return session;
         }),
+      };
+    case 'SET_SESSIONS':
+      return {
+        ...state,
+        Sessions: action.payload,
       };
 
     default:
