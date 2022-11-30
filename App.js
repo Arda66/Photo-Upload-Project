@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import MainPage from './components/screens/MainPage';
-import UploadPage from './components/screens/UploadPage';
+import MainPage from './src/screens/MainPage';
+import UploadPage from './src/screens/UploadPage';
 import store from './redux/store';
 import {Provider} from 'react-redux';
 

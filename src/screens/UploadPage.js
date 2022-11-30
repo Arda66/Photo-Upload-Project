@@ -20,7 +20,7 @@ const UploadPage = ({navigation, route}) => {
   const SessionID = route?.params?.SessionID;
   const dispatch = useDispatch();
   const {Sessions} = useSelector(state => state.reducer);
-  console.log('Sessions', Sessions);
+
   const AddPhotoToSession = async () => {
     let path = null;
     // create a variable to store the options
@@ -30,6 +30,7 @@ const UploadPage = ({navigation, route}) => {
       maxHeight: 200,
       maxWidth: 200,
       saveToPhotos: true,
+      Quality: 1,
     };
     const result = await launchCamera(options);
     if (result.didCancel) console.log('User cancelled camera picker');
