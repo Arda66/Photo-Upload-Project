@@ -16,5 +16,11 @@ const DeletePhoto = (photo, id) => {
     payload: {photo: photo, id: id},
   };
 };
+const SetSessions = sessions => {
+  return {
+    type: 'SET_SESSIONS',
+    payload: sessions,
+  };
+};
 
-export {CreateSession, AddPhoto, DeletePhoto};
+export {CreateSession, AddPhoto, DeletePhoto, SetSessions};
