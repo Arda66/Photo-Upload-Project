@@ -1,12 +1,38 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {CreateSession, AddPhoto, DeletePhoto} from './redux/actions';
+import {AddPhoto, DeletePhoto} from '../../redux/actions';
+import {launchCamera} from 'react-native-image-picker';
+
 import {useDispatch, useSelector} from 'react-redux';
 const UploadPage = ({navigation, route}) => {
   const SessionID = route?.params?.SessionID;
   const dispatch = useDispatch();
   const {Sessions} = useSelector(state => state.reducer);
+
+  const AddPhotoToSession = async () => {
+    let path = null;
+    // create a variable to store the options
+    let options = {
+      mediaType: 'photo',
+      includeBase64: true,
+      maxHeight: 200,
+      maxWidth: 200,
+      // saveToPhotos: true,
+    };
+    const result = await launchCamera(options);
+    if (result.didCancel) console.log('User cancelled camera picker');
+    else if (result.errorCode)
+      console.log('Camera picker error: ', result.errorMessage);
+    else {
+      path = result.assets[0].uri;
+      dispatch(AddPhoto(path, SessionID));
+    }
+  };
+
+  const DeletePhotoFromSession = path => {
+    dispatch(DeletePhoto(path, SessionID));
+  };
 
   return (
     <View style={styles.container}>
@@ -17,7 +43,9 @@ const UploadPage = ({navigation, route}) => {
       </View>
       <View style={styles.BottomWrapper}>
         {/* Add Photo Button */}
-        <TouchableOpacity style={styles.Button}>
+        <TouchableOpacity
+          onPress={() => AddPhotoToSession()}
+          style={styles.Button}>
           <MaterialIcons name="add-a-photo" size={25} color="black" />
           <Text style={styles.ButtonText}>Add Photo</Text>
         </TouchableOpacity>
