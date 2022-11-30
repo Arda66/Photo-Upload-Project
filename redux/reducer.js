@@ -12,6 +12,9 @@ const reducer = (state = INITIAL_STATE, action) => {
           {
             id: state.Sessions.length + 1,
             Photos: [],
+            Date: new Date().toLocaleString('tr-TR', {
+              timeZone: 'Europe/Istanbul',
+            }),
           },
         ],
       };
