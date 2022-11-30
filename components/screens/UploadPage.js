@@ -1,22 +1,22 @@
 import {
+  Alert,
   FlatList,
   Image,
+  ImageBackground,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {AddPhoto, DeletePhoto} from '../../redux/actions';
+import {AddPhoto, DeletePhoto, DeleteSession} from '../../redux/actions';
 import {launchCamera} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 
 const UploadPage = ({navigation, route}) => {
-  // useEffect(() => {
-  //   AsyncStorage
-
   const SessionID = route?.params?.SessionID;
   const dispatch = useDispatch();
   const {Sessions} = useSelector(state => state.reducer);
@@ -43,28 +43,70 @@ const UploadPage = ({navigation, route}) => {
   };
 
   const DeletePhotoFromSession = path => {
-    dispatch(DeletePhoto(path, SessionID));
-    AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
+    Alert.alert(
+      'Delete Photo',
+      'Are you sure you want to delete this photo ?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            dispatch(DeletePhoto(path, SessionID));
+            ToastAndroid.show('Photo Deleted', ToastAndroid.SHORT);
+            AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   const renderPhotoItem = ({item}) => {
     return (
       <View style={styles.PhotoContainer}>
-        <TouchableOpacity onPress={() => DeletePhotoFromSession(item)}>
-          <MaterialIcons
+        <ImageBackground source={{uri: item}} style={styles.Photo}>
+          <TouchableOpacity
             style={styles.DeleteButton}
-            name="cancel"
-            size={30}
-            color="red"
-          />
-        </TouchableOpacity>
-        <Image source={{uri: item}} style={styles.Photo} />
+            onPress={() => DeletePhotoFromSession(item)}>
+            <MaterialIcons name="cancel" size={30} color="red" />
+          </TouchableOpacity>
+        </ImageBackground>
       </View>
     );
   };
   const CompleteSession = () => {
     AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
     navigation.navigate('MainPage');
+  };
+  const DeleteSessionFromList = () => {
+    Alert.alert(
+      'Delete Session',
+      'Are you sure you want to delete this session ?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => {
+            dispatch(DeleteSession(SessionID));
+            ToastAndroid.show(
+              `Session ${SessionID} Deleted`,
+              ToastAndroid.SHORT,
+            );
+            AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
+            navigation.navigate('MainPage');
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   return (
@@ -75,7 +117,7 @@ const UploadPage = ({navigation, route}) => {
         <View style={styles.FlatListWrapper}>
           {/* Uploaded Photos */}
           <FlatList
-            data={Sessions[SessionID - 1].Photos}
+            data={Sessions[SessionID - 1]?.Photos}
             renderItem={renderPhotoItem}
             horizontal={true}
             keyExtractor={(item, index) => index.toString()}
@@ -96,26 +138,45 @@ const UploadPage = ({navigation, route}) => {
           <MaterialIcons name="add-a-photo" size={25} color="black" />
           <Text style={styles.ButtonText}>Add Photo</Text>
         </TouchableOpacity>
-        {/* Complete Session Button */}
-        <TouchableOpacity
-          onPress={() => CompleteSession()}
-          style={[
-            styles.Button,
-            {
-              width: '50%',
-              marginVertical: 30,
-              justifyContent: 'space-between',
-              height: 50,
-            },
-          ]}>
-          <MaterialIcons
-            style={{left: 3}}
-            name="check"
-            size={25}
-            color="black"
-          />
-          <Text style={styles.ButtonText}>Complete Session</Text>
-        </TouchableOpacity>
+        {/* Complete/Delete Session Button */}
+        <View style={styles.ButtonWrapper}>
+          <TouchableOpacity
+            onPress={() => DeleteSessionFromList()}
+            style={[
+              styles.Button,
+              {
+                width: '45%',
+                justifyContent: 'space-around',
+                height: 50,
+              },
+            ]}>
+            <MaterialIcons
+              style={{left: 5}}
+              name="cancel"
+              size={25}
+              color="black"
+            />
+            <Text style={styles.ButtonText}>Delete Session</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => CompleteSession()}
+            style={[
+              styles.Button,
+              {
+                width: '45%',
+                justifyContent: 'space-around',
+                height: 50,
+              },
+            ]}>
+            <MaterialIcons
+              style={{left: 3}}
+              name="check"
+              size={25}
+              color="black"
+            />
+            <Text style={styles.ButtonText}>Complete Session</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -150,15 +211,15 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   ButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'black',
     fontWeight: 'bold',
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   DeleteButton: {
     position: 'absolute',
-    top: -20,
-    right: -20,
+    top: -10,
+    left: -10,
   },
   PhotoContainer: {
     marginHorizontal: 10,
@@ -168,6 +229,7 @@ const styles = StyleSheet.create({
   Photo: {
     height: 200,
     width: 200,
+    borderRadius: 10,
   },
   FlatListWrapper: {
     justifyContent: 'center',
@@ -179,5 +241,10 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'red',
     fontWeight: 'bold',
+  },
+  ButtonWrapper: {
+    marginVertical: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });
