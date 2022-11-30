@@ -48,20 +48,23 @@ const MainPage = ({navigation}) => {
       </View>
     );
   };
+  const renderEmptyList = () => {
+    return <Text style={styles.Title}>No Session Yet</Text>;
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.TopWrapper}>
         {/*  Sessions   */}
         <FlatList
+          contentContainerStyle={
+            // center the empty list with conditional rendering
+            Sessions.length == 0 && {flexGrow: 1, justifyContent: 'center'}
+          }
           data={Sessions}
           renderItem={renderSessionItem}
           keyExtractor={(item, index) => index.toString()}
-          ListEmptyComponent={
-            <View>
-              <Text style={styles.Title}>No Sessions Yet</Text>
-            </View>
-          }
+          ListEmptyComponent={renderEmptyList}
         />
       </View>
       {/* Create Session Button */}
@@ -93,6 +96,7 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
   },
+
   Button: {
     alignSelf: 'center',
     width: '50%',
