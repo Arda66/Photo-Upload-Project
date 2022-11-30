@@ -1,8 +1,13 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {CreateSession, AddPhoto, DeletePhoto} from './redux/actions';
+import {useDispatch, useSelector} from 'react-redux';
+const UploadPage = ({navigation, route}) => {
+  const SessionID = route?.params?.SessionID;
+  const dispatch = useDispatch();
+  const {Sessions} = useSelector(state => state.reducer);
 
-const UploadPage = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.TopWrapper}>
