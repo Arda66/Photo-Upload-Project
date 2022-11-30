@@ -1,6 +1,14 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import EntypoIcon from 'react-native-vector-icons/Entypo';
 import {CreateSession, AddPhoto, DeletePhoto} from '../../redux/actions';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -11,7 +19,7 @@ const MainPage = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.TopWrapper}>
+      <ScrollView style={styles.TopWrapper}>
         {/*  Sessions   */}
         {Sessions.length > 0 ? (
           Sessions.map((item, index) => {
@@ -22,9 +30,17 @@ const MainPage = ({navigation}) => {
                   {marginTop: item.id == 1 ? 30 : 0}, //conditional rendering for the first element
                 ]}
                 key={index}>
-                <Text style={styles.SessionTitle}>
-                  Session {item.id} - {item.Date}
-                </Text>
+                <View style={styles.SessionWrapper}>
+                  <Text style={styles.SessionTitle}>
+                    Session {item.id} - {item.Date}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('UploadPage', {SessionID: index + 1})
+                    }>
+                    <EntypoIcon name="edit" size={25} color="black" />
+                  </TouchableOpacity>
+                </View>
               </View>
             );
           })
@@ -35,12 +51,13 @@ const MainPage = ({navigation}) => {
             <Text style={styles.Title}>No session yet</Text>
           </View>
         )}
-      </View>
+      </ScrollView>
       {/* Create Session Button */}
       <TouchableOpacity
         style={styles.Button}
         onPress={() => {
-          dispatch(CreateSession()), navigation.navigate('UploadPage');
+          dispatch(CreateSession()),
+            navigation.navigate('UploadPage', {SessionID: Sessions.length + 1});
         }}>
         <AntDesignIcon name="addfolder" size={25} color="black" />
         <Text style={styles.ButtonText}>Create Session</Text>
@@ -88,10 +105,16 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderColor: 'black',
   },
+  SessionWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
   SessionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
     padding: 13,
+    right: 20,
   },
 });
