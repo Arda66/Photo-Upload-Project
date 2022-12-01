@@ -11,12 +11,14 @@ const SessionItem = ({item, index, navigation}) => {
       ]}
       key={index}>
       <View style={styles.SessionWrapper}>
+        {/* // I use a View to wrap the session title and the session edit button */}
         <Text style={styles.SessionTitle}>
           Session {item.id} - {item.Date}
         </Text>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('UploadPage', {
+              // I navigate to the UploadPage and pass the SessionID to it
               SessionID: index + 1,
             })
           }>
@@ -27,7 +29,7 @@ const SessionItem = ({item, index, navigation}) => {
   );
 };
 
-export default SessionItem; // I documenting the code and explained what I did in the codes as comments
+export default SessionItem;
 
 const styles = StyleSheet.create({
   SessionContainer: {
