@@ -1,8 +1,6 @@
 import {
   Alert,
   FlatList,
-  Image,
-  ImageBackground,
   StyleSheet,
   Text,
   ToastAndroid,
@@ -15,6 +13,7 @@ import {AddPhoto, DeletePhoto, DeleteSession} from '../../redux/actions';
 import {launchCamera} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
+import PhotoItem from '../components/PhotoItem';
 
 const UploadPage = ({navigation, route}) => {
   const SessionID = route?.params?.SessionID;
@@ -67,17 +66,7 @@ const UploadPage = ({navigation, route}) => {
   };
 
   const renderPhotoItem = ({item}) => {
-    return (
-      <View style={styles.PhotoContainer}>
-        <ImageBackground source={{uri: item}} style={styles.Photo}>
-          <TouchableOpacity
-            style={styles.DeleteButton}
-            onPress={() => DeletePhotoFromSession(item)}>
-            <MaterialIcons name="cancel" size={30} color="red" />
-          </TouchableOpacity>
-        </ImageBackground>
-      </View>
-    );
+    return <PhotoItem item={item} DeletePhoto={DeletePhotoFromSession} />;
   };
   const CompleteSession = () => {
     AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
@@ -216,21 +205,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     paddingHorizontal: 10,
-  },
-  DeleteButton: {
-    position: 'absolute',
-    top: -10,
-    left: -10,
-  },
-  PhotoContainer: {
-    marginHorizontal: 10,
-    paddingTop: 25,
-    flexDirection: 'row',
-  },
-  Photo: {
-    height: 200,
-    width: 200,
-    borderRadius: 10,
   },
   FlatListWrapper: {
     justifyContent: 'center',
