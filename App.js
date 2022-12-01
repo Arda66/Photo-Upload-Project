@@ -10,6 +10,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
+      {/* // I wrap the App with the Provider component and pass the store to it */}
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="MainPage" component={MainPage} />

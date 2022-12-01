@@ -2,11 +2,12 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 const SessionItem = ({item, index, navigation}) => {
+  // I destructure the item, index and navigation props
   return (
     <View
       style={[
         styles.SessionContainer,
-        {marginTop: item.id == 1 ? 30 : 10}, //conditional rendering for the first element
+        {marginTop: item.id == 1 ? 30 : 10}, // conditional rendering for the first element in the array to add a top margin of 30 to it and 10 to the rest of them
       ]}
       key={index}>
       <View style={styles.SessionWrapper}>
@@ -26,7 +27,7 @@ const SessionItem = ({item, index, navigation}) => {
   );
 };
 
-export default SessionItem;
+export default SessionItem; // I documenting the code and explained what I did in the codes as comments
 
 const styles = StyleSheet.create({
   SessionContainer: {

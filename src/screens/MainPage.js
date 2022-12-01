@@ -7,16 +7,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SessionItem from '../components/SessionItem';
 
 const MainPage = ({navigation}) => {
+  // I use destructuring to get the navigation prop
   const dispatch = useDispatch();
   const {Sessions} = useSelector(state => state.reducer);
 
   useEffect(() => {
-    InitializeSession();
+    InitializeSession(); // I use useEffect to get the Sessions from the AsyncStorage and save it to the InitialState
   }, []);
 
   const InitializeSession = () => {
     AsyncStorage.getItem('Sessions').then(data => {
-      data && dispatch({type: 'SET_SESSIONS', payload: JSON.parse(data)});
+      data && dispatch({type: 'SET_SESSIONS', payload: JSON.parse(data)}); // set the Sessions to the InitialState
     });
   };
 
@@ -24,16 +25,16 @@ const MainPage = ({navigation}) => {
     dispatch(CreateSession());
     AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
     navigation.navigate('UploadPage', {
-      SessionID: Sessions.length + 1,
+      SessionID: Sessions.length + 1, // I pass the SessionID to the UploadPage
     });
   };
 
   const renderSessionItem = ({item, index}) => {
-    return <SessionItem item={item} index={index} navigation={navigation} />;
+    return <SessionItem item={item} index={index} navigation={navigation} />; // I pass the item, index and navigation props to the SessionItem component
   };
 
   const renderEmptyList = () => {
-    return <Text style={styles.Title}>No Session Yet</Text>;
+    return <Text style={styles.Title}>No Session Yet</Text>; // I render this text if the Sessions array is empty
   };
 
   return (
@@ -42,12 +43,11 @@ const MainPage = ({navigation}) => {
         {/*  Sessions   */}
         <FlatList
           contentContainerStyle={
-            // center the empty list with conditional rendering
-            Sessions.length == 0 && {flexGrow: 1, justifyContent: 'center'}
+            Sessions.length == 0 && {flexGrow: 1, justifyContent: 'center'} // I use conditional rendering to center the empty list text if the Sessions array is empty
           }
           data={Sessions}
           renderItem={renderSessionItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => index.toString()} // I use the index as the key
           ListEmptyComponent={renderEmptyList}
         />
       </View>

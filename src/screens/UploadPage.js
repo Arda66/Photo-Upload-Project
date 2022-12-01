@@ -16,9 +16,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import PhotoItem from '../components/PhotoItem';
 
 const UploadPage = ({navigation, route}) => {
-  const SessionID = route?.params?.SessionID;
-  const dispatch = useDispatch();
-  const {Sessions} = useSelector(state => state.reducer);
+  const SessionID = route?.params?.SessionID; // get the SessionID from MainPage and I use optional chaining to avoid undefined error
+  const dispatch = useDispatch(); // I use the useDispatch hook to dispatch actions
+  const {Sessions} = useSelector(state => state.reducer); // I use the useSelector hook to get the Sessions from the InitialState
 
   const AddPhotoToSession = async () => {
     let path = null;
@@ -35,9 +35,9 @@ const UploadPage = ({navigation, route}) => {
     else if (result.errorCode)
       alert('Camera picker error: ', result.errorMessage);
     else {
-      path = result.assets[0].uri;
+      path = result.assets[0].uri; // get the path of the photo
       dispatch(AddPhoto(path, SessionID));
-      AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
+      AsyncStorage.setItem('Sessions', JSON.stringify(Sessions)); // save the Sessions to the AsyncStorage
     }
   };
 
@@ -56,7 +56,7 @@ const UploadPage = ({navigation, route}) => {
           onPress: () => {
             dispatch(DeletePhoto(path, SessionID));
             ToastAndroid.show('Photo Deleted', ToastAndroid.SHORT);
-            AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
+            AsyncStorage.setItem('Sessions', JSON.stringify(Sessions)); // save the Sessions to the AsyncStorage
           },
         },
       ],
@@ -65,7 +65,7 @@ const UploadPage = ({navigation, route}) => {
   };
 
   const renderPhotoItem = ({item}) => {
-    return <PhotoItem item={item} DeletePhoto={DeletePhotoFromSession} />;
+    return <PhotoItem item={item} DeletePhoto={DeletePhotoFromSession} />; // I pass the item and DeletePhoto props to the PhotoItem component
   };
   const CompleteSession = () => {
     AsyncStorage.setItem('Sessions', JSON.stringify(Sessions));
@@ -109,9 +109,10 @@ const UploadPage = ({navigation, route}) => {
             data={Sessions[SessionID - 1]?.Photos}
             renderItem={renderPhotoItem}
             horizontal={true}
-            keyExtractor={(item, index) => index.toString()}
-            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()} // I use the index as the key because the path may not be unique in the future
+            showsHorizontalScrollIndicator={false} // hide the horizontal scroll bar
             ListEmptyComponent={
+              // if the list is empty show this text instead
               <Text style={styles.EmptyFlatListText}>
                 No photos uploaded yet
               </Text>
@@ -150,6 +151,7 @@ const UploadPage = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => CompleteSession()}
             style={[
+              // I use an array to pass multiple styles to the TouchableOpacity
               styles.Button,
               {
                 width: '45%',
