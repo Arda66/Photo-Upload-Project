@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
   PhotoContainer: {
     marginHorizontal: 10,
     paddingTop: 25,
-    flexDirection: 'row',
   },
   Photo: {
     height: 200,
