@@ -1,7 +1,7 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import {CreateSession} from '../../redux/actions';
+import {CreateSession} from '../redux/actions';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SessionItem from '../components/SessionItem';

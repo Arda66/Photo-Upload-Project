@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {AddPhoto, DeletePhoto, DeleteSession} from '../../redux/actions';
+import {AddPhoto, DeletePhoto, DeleteSession} from '../redux/actions';
 import {launchCamera} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
