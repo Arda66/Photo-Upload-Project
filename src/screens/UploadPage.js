@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {AddPhoto, DeletePhoto, DeleteSession} from '../redux/actions';
+import {AddPhoto, DeletePhoto, DeleteSession} from '../redux/actions/actions';
 import {launchCamera} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
@@ -25,7 +25,6 @@ const UploadPage = ({navigation, route}) => {
     // create a variable to store the options
     let options = {
       mediaType: 'photo',
-      includeBase64: true,
       maxHeight: 200,
       maxWidth: 200,
       saveToPhotos: true,
@@ -34,7 +33,7 @@ const UploadPage = ({navigation, route}) => {
     const result = await launchCamera(options);
     if (result.didCancel) console.log('User cancelled camera picker');
     else if (result.errorCode)
-      console.log('Camera picker error: ', result.errorMessage);
+      alert('Camera picker error: ', result.errorMessage);
     else {
       path = result.assets[0].uri;
       dispatch(AddPhoto(path, SessionID));
@@ -49,7 +48,7 @@ const UploadPage = ({navigation, route}) => {
       [
         {
           text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
+          onPress: () => null,
           style: 'cancel',
         },
         {
