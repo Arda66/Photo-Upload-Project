@@ -28,7 +28,7 @@ const UploadPage = ({navigation, route}) => {
       maxHeight: 200,
       maxWidth: 200,
       saveToPhotos: true,
-      Quality: 1,
+      quality: 1,
     };
     const result = await launchCamera(options);
     if (result.didCancel) console.log('User cancelled camera picker');
