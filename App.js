@@ -12,16 +12,8 @@ const App = () => {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen
-            // options={{headerShown: false}}
-            name="MainPage"
-            component={MainPage}
-          />
-          <Stack.Screen
-            // options={{headerShown: false}}
-            name="UploadPage"
-            component={UploadPage}
-          />
+          <Stack.Screen name="MainPage" component={MainPage} />
+          <Stack.Screen name="UploadPage" component={UploadPage} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
